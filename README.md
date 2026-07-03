@@ -76,26 +76,35 @@ ip route 192.168.30.0 255.255.255.0 14.1.1.1 10
 
 ## ✅ Verification
 
-**Running configuration** — full config per router, including primary + floating routes:
-`running-config-R-1.png`, `running-config-R-2.png`, `running-config-R-3.png`, `running-config-R-4.png`
-
-**Routing table — normal state** — confirms only primary routes are active before any failure:
-`routing-table-normal-R-1.png` through `R-4.png`
-
-**Connectivity test — normal state:**
-`ping-normal.png`, `tracert-normal.png`
-
 **Simulated link failure** — R1–R2 serial link manually shut down:
-`link-failure.png`
 
-**Routing table — after failover** — confirms floating routes activated and traffic now flows via the backup path around the ring:
-`routing-table-after-failover-R-1.png` through `R-4.png`
+![Link Failure](link-failure.png)
 
-**Connectivity test — after failover** — 0% packet loss maintained, traceroute confirms new path through R-4 and R-3:
-`ping-after-failover.png`, `tracert-after-failover.png`
+**Routing table — normal vs. after failover (R-1)** — confirms only primary routes are active before the failure, and floating routes take over once the link goes down:
+
+| Normal | After Failover |
+|--------|----------------|
+| ![R-1 Routing Table Normal](routing-table-normal-R-1.png) | ![R-1 Routing Table After Failover](routing-table-after-failover-R-1.png) |
+
+**Traceroute — normal vs. after failover** — proves traffic reroutes through R-4 and R-3 once the primary link is down:
+
+| Normal | After Failover |
+|--------|----------------|
+| ![Traceroute Normal](tracert-normal.png) | ![Traceroute After Failover](tracert-after-failover.png) |
+
+**Ping test — after failover** — confirms 0% packet loss is maintained despite the outage:
+
+![Ping After Failover](ping-after-failover.png)
 
 **Routing table — after recovery** — link restored (`no shutdown`), confirms primary route on R-1 is preferred again over the floating backup:
-`routing-table-recovery.png`
+
+![Routing Table Recovery](routing-table-recovery.png)
+
+**Additional screenshots** (running-configs, per-router routing tables for R-2/R-3/R-4 in all three states, normal ping) are available in the [`/screenshots`](./screenshots) folder for anyone who wants the full evidence set:
+- `running-config-R-1.png` ... `R-4.png`
+- `routing-table-normal-R-2.png`, `R-3.png`, `R-4.png`
+- `routing-table-after-failover-R-2.png`, `R-3.png`, `R-4.png`
+- `ping-normal.png`
 
 ## 🛠️ Troubleshooting: Routing Loop
 During failover testing, pings across the failed link initially **timed out** despite floating routes being configured. Investigation of the routing tables revealed a **routing loop between R-2 and R-3**: R-3's only route back to Site 1 pointed to R-2, while R-2's active floating route pointed back to R-3 — causing packets to bounce between them until TTL expired.
