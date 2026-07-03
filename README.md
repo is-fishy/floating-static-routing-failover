@@ -96,10 +96,6 @@ ip route 192.168.30.0 255.255.255.0 14.1.1.1 10
 
 ![Ping After Failover](ping-after-failover.png)
 
-**Routing table — after recovery** — link restored (`no shutdown`), confirms primary route on R-1 is preferred again over the floating backup:
-
-![Routing Table Recovery](routing-table-recovery.png)
-
 **Additional screenshots** (running-configs, per-router routing tables for R-2/R-3/R-4 in all three states, normal ping) are available in the [`/screenshots`](./screenshots) folder for anyone who wants the full evidence set:
 - `running-config-R-1.png` ... `R-4.png`
 - `routing-table-normal-R-2.png`, `R-3.png`, `R-4.png`
@@ -127,7 +123,6 @@ Cisco Packet Tracer
 - `running-config-R-1.png` ... `R-4.png`
 - `routing-table-normal-R-1.png` ... `R-4.png`
 - `routing-table-after-failover-R-1.png` ... `R-4.png`
-- `routing-table-recovery.png`
 - `link-failure.png`
 - `ping-normal.png`, `tracert-normal.png`
 - `ping-after-failover.png`, `tracert-after-failover.png`
